@@ -33,22 +33,21 @@ vector<string> split_str_by_space(string str_in) {
     return str_out;
 }
 
-class ATOM {
-    public:
-        string element;
-        int atomic_num;
-        double atomic_mass;
-        double cart_coor[3];
+struct ATOM {
+    string element;
+    int atomic_num;
+    double atomic_mass;
+    double cart_coor[3];
 
-        void print_atom() {
-            cout<< "element:\t"<<element <<endl;
-            cout<< "atomic number:\t"<<atomic_num <<endl;
-            cout<< "atomic mass:\t"<<atomic_mass <<endl;
-            cout<< "cartesian coordinate:"<<endl;
-            cout<< "x="<<cart_coor[0] <<"\t";
-            cout<< "y="<<cart_coor[1] <<"\t";
-            cout<< "z="<<cart_coor[2] <<endl<<endl;
-        }
+    void print_atom() {
+        cout<< "element:\t"<<element <<endl;
+        cout<< "atomic number:\t"<<atomic_num <<endl;
+        cout<< "atomic mass:\t"<<atomic_mass <<endl;
+        cout<< "cartesian coordinate:"<<endl;
+        cout<< "x="<<cart_coor[0] <<"\t";
+        cout<< "y="<<cart_coor[1] <<"\t";
+        cout<< "z="<<cart_coor[2] <<endl<<endl;
+    }
 };
 
 void store_input(){   
