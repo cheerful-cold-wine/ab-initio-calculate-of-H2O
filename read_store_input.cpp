@@ -24,13 +24,13 @@ vector<string> read_file(string file_name) {
     return file_str;
 }
 
-vector<string> split_str_by_space(string str) {
-    vector<string> result;
-    istringstream iss(str);
+vector<string> split_str_by_space(string str_in) {
+    vector<string> str_out;
+    istringstream iss(str_in);
     for (string word; iss>>word;){
-        result.push_back(word);
+        str_out.push_back(word);
     }
-    return result;
+    return str_out;
 }
 
 class ATOM {
@@ -41,17 +41,17 @@ class ATOM {
         double cart_coor[3];
 
         void print_atom() {
-            cout<< element <<endl;
-            cout<< atomic_num <<endl;
-            cout<< atomic_mass <<endl;
-            cout<< cart_coor[0] <<endl;
-            cout<< cart_coor[1] <<endl;
-            cout<< cart_coor[2] <<endl;
+            cout<< "element:\t"<<element <<endl;
+            cout<< "atomic number:\t"<<atomic_num <<endl;
+            cout<< "atomic mass:\t"<<atomic_mass <<endl;
+            cout<< "cartesian coordinate:"<<endl;
+            cout<< "x="<<cart_coor[0] <<"\t";
+            cout<< "y="<<cart_coor[1] <<"\t";
+            cout<< "z="<<cart_coor[2] <<endl<<endl;
         }
 };
 
-int main()
-{   
+void store_input(){   
     // deal with the cartesian coordinates
     vector<string> structure_str = read_file("structure.xyz");
     ATOM atom[structure_str.size()]; 
@@ -75,14 +75,17 @@ int main()
     // deal with the basis set (cc-pVTZ of H2O here)
     vector<string> basis_str = read_file("basis");
     vector<string> basis_split_str;
-    for (string str : basis_str){
-        vector<string> str_= split_str_by_space(str);
-        for (int i=0; i<str_.size(); i++){
-            basis_split_str.push_back(str_[i]);
+    for (string str_line : basis_str){
+        vector<string> str_word= split_str_by_space(str_line);
+        for (int i=0; i<str_word.size(); i++){
+            basis_split_str.push_back(str_word[i]);
         }
-        if (str=="****") continue;
+        if (str_line=="****") continue;
     }
+}
 
-
+int main()
+{
+    store_input();
     return 0;
 }
