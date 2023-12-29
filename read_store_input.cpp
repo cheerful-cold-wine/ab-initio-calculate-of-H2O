@@ -1,8 +1,8 @@
 #include<iostream>
 #include<fstream>
+#include<sstream>
 #include<filesystem>
 #include<string>
-#include<sstream>
 #include<vector>
 
 using namespace std;
@@ -50,6 +50,12 @@ struct ATOM {
     }
 };
 
+struct BASIS {
+    string element;
+    int atomic_num;
+    int max_l;
+};
+
 void store_input(){   
     // deal with the cartesian coordinates
     vector<string> structure_str = read_file("structure.xyz");
@@ -69,7 +75,7 @@ void store_input(){
             atom[i].atomic_mass=15.9994;
         }
     }    
-    for (int i=0; i<3; i++) atom[i].print_atom();// for checking
+    //for (int i=0; i<3; i++) atom[i].print_atom();// for checking
 
     // deal with the basis set (cc-pVTZ of H2O here)
     vector<string> basis_str = read_file("basis");
@@ -79,7 +85,10 @@ void store_input(){
         for (int i=0; i<str_word.size(); i++){
             basis_split_str.push_back(str_word[i]);
         }
-        if (str_line=="****") continue;
+    }
+    for (int i=0; i<basis_split_str.size(); i++){
+        if (basis_split_str[i]=="****" and i+1!=basis_split_str.size() ){
+        }
     }
 }
 
