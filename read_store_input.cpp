@@ -33,7 +33,7 @@ vector<string> split_str_by_space(string str_in) {
     return str_out;
 }
 
-struct ATOM {
+struct ATOM_INFO {
     string element;
     int atomic_num;
     double atomic_mass;
@@ -50,16 +50,31 @@ struct ATOM {
     }
 };
 
-struct BASIS {
+struct BASIS_INFO {
     string element;
     int atomic_num;
-    int max_l;
+    int max_l;//max_l + 1 = number of shell
+
+    void print_basis() {
+        cout<< "element:\t"<<element <<endl;
+        cout<< "atomic number:\t"<<atomic_num <<endl;
+        cout<< "max angular momentum: \t"<< max_l<<endl;
+    }
+};
+
+struct SHELL_INFO {
+    int ang_mom;//angular momentum
+    int num_pGTO;//primitive gaussian type orbital(GTO)
+    int num_cGTO;//contraction GTO
+    // pGTO ---linear combination---> cGTO
+    double* expo;//exponential of pGTO
+    double* coef;//coefficient of linear combination
 };
 
 void store_input(){   
     // deal with the cartesian coordinates
     vector<string> structure_str = read_file("structure.xyz");
-    ATOM atom[structure_str.size()]; 
+    ATOM_INFO atom[structure_str.size()]; 
     for (int i=0; i<structure_str.size(); i++) {
         vector<string> structure_split_str = split_str_by_space(structure_str[i]);
         atom[i].element = structure_split_str[0];
@@ -86,10 +101,25 @@ void store_input(){
             basis_split_str.push_back(str_word[i]);
         }
     }
+    vector<int> star_position;// the start and end of one basis 
     for (int i=0; i<basis_split_str.size(); i++){
-        if (basis_split_str[i]=="****" and i+1!=basis_split_str.size() ){
+        if(basis_split_str[i]=="****") {
+            star_position.push_back(i);
         }
     }
+    BASIS_INFO diff_basis[star_position.size()-1];
+    for (int i=0; i<star_position.size()-1; i++){
+        int i_start = star_position[i]+1;
+        //int i_end = star_position[i+1]-1;
+        diff_basis[i].element = basis_split_str[i_start];
+        diff_basis[i].atomic_num = stoi(basis_split_str[i_start+1]);
+        diff_basis[i].max_l = stoi(basis_split_str[i_start+2]);
+    }
+
+    for (int i=0; i<2;i++){
+        diff_basis[i].print_basis();
+    }
+    
 }
 
 int main()
