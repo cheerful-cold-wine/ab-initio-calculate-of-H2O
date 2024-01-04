@@ -114,6 +114,9 @@ void store_input(){
         diff_basis[i].element = basis_split_str[i_start];
         diff_basis[i].atomic_num = stoi(basis_split_str[i_start+1]);
         diff_basis[i].max_l = stoi(basis_split_str[i_start+2]);
+        SHELL_INFO shell[diff_basis[i].max_l+1];
+        for (int j=0; j<diff_basis[i].max_l+1; j++){
+        }
     }
 
     for (int i=0; i<2;i++){
