@@ -119,7 +119,6 @@ void store_input(){
     for (int i=0; i<2;i++){
         diff_basis[i].print_basis();
     }
-    
 }
 
 int main()
