@@ -63,12 +63,21 @@ struct BASIS_INFO {
 };
 
 struct SHELL_INFO {
-    int ang_mom;//angular momentum
-    int num_pGTO;//primitive gaussian type orbital(GTO)
-    int num_cGTO;//contraction GTO
-    // pGTO ---linear combination---> cGTO
-    double* expo;//exponential of pGTO
-    double* coef;//coefficient of linear combination
+    string sign;
+    int ang_mom; 
+    int num_pGTO;// primitive GTO
+    int num_cGTO;// contraction GTO
+    double* exp_pGTO;
+    double* coef_LC;// linear combination
+
+    void check_angmom() {
+        cout << "angular momentum :";
+        if     (sign=="S" and ang_mom==0) cout<< "S"<<endl;
+        else if(sign=="P" and ang_mom==1) cout<< "P"<<endl;
+        else if(sign=="D" and ang_mom==2) cout<< "D"<<endl;
+        else if(sign=="F" and ang_mom==3) cout<< "F"<<endl;
+        else cout<< "unknown"<<endl;
+    }
 };
 
 void store_input(){   
@@ -88,7 +97,7 @@ void store_input(){
         } else {
             atom[i].atomic_num=8;
             atom[i].atomic_mass=15.9994;
-        }
+        } 
     }    
     //for (int i=0; i<3; i++) atom[i].print_atom();// for checking
 
@@ -101,27 +110,52 @@ void store_input(){
             basis_split_str.push_back(str_word[i]);
         }
     }
+
     vector<int> star_position;// the start and end of one basis 
     for (int i=0; i<basis_split_str.size(); i++){
         if(basis_split_str[i]=="****") {
             star_position.push_back(i);
         }
     }
+
     BASIS_INFO diff_basis[star_position.size()-1];
     for (int i=0; i<star_position.size()-1; i++){
         int i_start = star_position[i]+1;
         //int i_end = star_position[i+1]-1;
-        diff_basis[i].element = basis_split_str[i_start];
+        diff_basis[i].element    = basis_split_str[i_start];
         diff_basis[i].atomic_num = stoi(basis_split_str[i_start+1]);
-        diff_basis[i].max_l = stoi(basis_split_str[i_start+2]);
-        SHELL_INFO shell[diff_basis[i].max_l+1];
+        diff_basis[i].max_l      = stoi(basis_split_str[i_start+2]);
+        // 
+        int j_start = i_start +3;
+        vector<SHELL_INFO> diff_shell;
         for (int j=0; j<diff_basis[i].max_l+1; j++){
+            SHELL_INFO one_shell;
+            // one_shell.sign = basis_split_str[j_start];
+            one_shell.ang_mom = j;
+            // one_shell.check_angmom();
+            one_shell.num_pGTO = stoi(basis_split_str[j_start+1]);
+            one_shell.num_cGTO = stoi(basis_split_str[j_start+2]);
+            one_shell.exp_pGTO = new double[one_shell.num_pGTO];
+            one_shell.coef_LC  = new double[one_shell.num_pGTO*one_shell.num_cGTO];
+            for (int k=0; k<one_shell.num_pGTO; k++){
+                one_shell.exp_pGTO[k] = stod(basis_split_str[j_start +3 +k]);
+                //cout<< one_shell.exp_pGTO[k]<<endl;
+            }
+            for (int l=0; l<one_shell.num_pGTO*one_shell.num_cGTO; l++){
+                one_shell.coef_LC[l] = stod(basis_split_str[j_start +3 +one_shell.num_pGTO +l]);
+                //cout<< one_shell.coef_LC[l]<<endl;
+            }
+            //
+            diff_shell.push_back(one_shell);
+            j_start = j_start +3 +one_shell.num_pGTO*(one_shell.num_cGTO +1);
         }
     }
-
+    
+    /* check
     for (int i=0; i<2;i++){
         diff_basis[i].print_basis();
     }
+    */
 }
 
 int main()
